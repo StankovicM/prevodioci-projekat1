@@ -1,7 +1,20 @@
 from string import ascii_lowercase, digits
 op_signs = ('+', '-', '*', '/', '>', '<', '=', '!')
+parenthesis = ('(', ')')
 alphabet = (*ascii_lowercase, '_')
 whitespaces = (' ', '\t', '\n')
+
+class Token():
+
+    def __init__(self, t_value, t_type):
+        self.value = t_value
+        self.type = t_type
+
+    def __repr__(self):
+        return f'{self.value} <{self.type}>'
+
+    def __str__(self):
+        return f'{self.value} <{self.type}>'
 
 def tokenize(s):
     tokens = []
@@ -29,123 +42,49 @@ def tokenize(s):
 
                         break
 
-                tokens.append(s[i:j])
-                i = j - 2
+                tokens.append(Token(s[i:j], 'fun'))
+                i = j - 1
             else:
                 j = i
                 while True:
-                    if s[j] in whitespaces or s[j] in op_signs:
+                    if s[j] in whitespaces or s[j] in op_signs or s[j] in parenthesis:
                         break
 
                     j += 1
                     if j > n - 1:
                         break
 
-                tokens.append(s[i:j])
+                tokens.append(Token(s[i:j], 'var'))
                 i = j - 1
         elif s[i] in digits:
             j = i
             while True:
-                if s[j] in whitespaces or s[j] in op_signs or s[j] in alphabet:
+                if s[j] in whitespaces or s[j] in op_signs or s[j] in alphabet or s[j] in parenthesis:
                     break
 
                 j += 1
                 if j > n - 1:
                     break
 
-            tokens.append(s[i:j])
+            tokens.append(Token(s[i:j], 'num'))
             i = j - 1
         elif s[i] in op_signs:
             j = i
             while True:
-                if s[j] in whitespaces or s[j] in alphabet or s[j] in digits:
+                if s[j] in whitespaces or s[j] in alphabet or s[j] in digits or s[j] in parenthesis:
                     break
 
                 j += 1
                 if j > n - 1:
                     break
 
-            tokens.append(s[i:j])
+            tokens.append(Token(s[i:j], 'op'))
             i = j - 1
+        elif s[i] in parenthesis:
+            tokens.append(Token(s[i], 'par'))
 
         i += 1
         if i > n - 1:
             break
-
-    return tokens
-
-def tokenize_2(s):
-    tokens = []
-    token = ''
-    n = len(s)
-    i = 0
-    while i < n:
-        c = s[i]
-
-        if c in whitespaces:
-            token = ''
-            continue
-        
-        if c in alphabet:
-            if s[i + 1] == 'i' and s[i + 2] == 'm' and s[i + 3] == '(':
-                # Token je funkcija rim(x)
-                token += c
-                while True:
-                    i += 1
-                    if i == n - 1:
-                        token += s[i]
-                        break
-                    elif i > n - 1:
-                        break
-
-                    c = s[i]
-                    token += c
-                    if c == ')':
-                        break
-
-                tokens.append(token)
-                token = ''
-            else:
-                # Token je promenljiva
-                token += c
-                while True:
-                    i += 1
-                    if i == n - 1:
-                        token += s[i]
-                        break
-                    elif i > n - 1:
-                        break
-
-                    c = s[i]
-                    if c in whitespaces or c in op_signs:
-                        break
-                    
-                    token += c
-
-                tokens.append(token)
-                token = ''
-        elif c in op_signs:
-            
-            pass
-        elif c in digits:
-            token += c
-            while True:
-                i += 1
-                if i == n - 1:
-                    token += s[i]
-                    break
-                elif i > n - 1:
-                    break
-
-                c = s[i]
-                if c in whitespaces or c in op_signs or c in alphabet:
-                    break
-                
-                token += c
-
-            tokens.append(token)
-            token = c
-        
-        i += 1
 
     return tokens
