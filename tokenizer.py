@@ -1,9 +1,13 @@
 from string import ascii_lowercase, digits
+
 op_signs = ('+', '-', '*', '/', '>', '<', '=', '!')
 parenthesis = ('(', ')')
 alphabet = (*ascii_lowercase, '_')
 whitespaces = (' ', '\t', '\n')
 
+# -------------------------------------------------------------------------
+# Klasa token sadrzi sve potrebne informacije o tokenu
+# -------------------------------------------------------------------------
 class Token():
 
     def __init__(self, t_value, t_type, is_bool=False, bool_val=False):
@@ -24,6 +28,9 @@ class Token():
         
         return f'{self.value} <{self.type}>'
 
+# -------------------------------------------------------------------------
+# tokenize - parsira ulaz i pretvara ga u listu tokena
+# -------------------------------------------------------------------------
 def tokenize(s):
     tokens = []
     n = len(s)
@@ -96,3 +103,5 @@ def tokenize(s):
             break
 
     return tokens
+    
+# -------------------------------------------------------------------------
