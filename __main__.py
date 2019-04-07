@@ -4,8 +4,8 @@ from evals import eval_prefix, eval_infix, eval_postfix, eval_infix2
 evals = {-1:eval_prefix, 0:eval_infix2, 1:eval_postfix}
 
 running = True
-state = 1
-prompt_text = 'POSTFIX'
+state = 0
+prompt_text = 'INFIX'
 
 def c_exit():
     global running
@@ -37,5 +37,5 @@ if __name__ == '__main__':
             commands[s]()
         else:
             expr = tokenize(s)
-            print(expr)
-            print(evals[state](expr))
+            print('Tokenizovan izraz:', expr)
+            print('Rezultat:', evals[state](expr))

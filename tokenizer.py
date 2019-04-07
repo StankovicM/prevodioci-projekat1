@@ -6,14 +6,22 @@ whitespaces = (' ', '\t', '\n')
 
 class Token():
 
-    def __init__(self, t_value, t_type):
+    def __init__(self, t_value, t_type, is_bool=False, bool_val=False):
         self.value = t_value
         self.type = t_type
+        self.is_bool = is_bool
+        self.bool_val = bool_val
 
     def __repr__(self):
+        if self.is_bool:
+            return f'{self.value} [{self.bool_val}] <{self.type}>'
+
         return f'{self.value} <{self.type}>'
 
     def __str__(self):
+        if self.is_bool:
+            return f'{self.value} [{self.bool_val}] <{self.type}>'
+        
         return f'{self.value} <{self.type}>'
 
 def tokenize(s):

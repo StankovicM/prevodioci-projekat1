@@ -146,19 +146,68 @@ def eval_infix2(expr):
         return vals[-1]
 
 # -------------------------------------------------------------------------
-def eval_postfix(expr):
-    if len(expr) < 3:
-        print('Izraz nema dovoljan broj operanada i operatora.')
-        return -1
+def applyOp(t1, t2, op):
+    if t1.type == 'var' and op != '=':
+        val1 = variables[t1.value]
+    
+    if t2.type == 'var':
+        try:
+            val2 = variables[t2.value]
+        except KeyError:
+            print(f'Promenljiva {t2.value} ne postoji.')
+            return None
 
+    if t1.type == 'fun':
+        val1 = rim(t1.value[4:-1])
+
+    if t2.type == 'fun':
+        val2 = rim(t2.value[4:-1])
+
+    if t1.type == 'num':
+        val1 = int(t1.value)
+
+    if t2.type == 'num':
+        val2 = int(t2.value)
+
+    if op == '+':
+        return val1 + val2
+    if op == '-':
+        return val1 - val2
+    if op == '*':
+        return val1 * val2
+    if op == '/':
+        return val1 // val2
+    if op == '=':
+        variables[t1.value] = int(val2)
+        return variables[t1.value]
+    
+
+def eval_postfix(expr):
+    ce = check_expr(expr)
+    if ce[0] == -1:
+        return -1
+    elif ce[0] == 0:
+        return ce[1]
+    
+    print('Postfiksni izraz:', expr)
     s = []
 
     for token in expr:
         if isid(token):
-            # TODO resiti
+            s.insert(0, token)
+        else:
+            val2 = s.pop(0)
+            val1 = s.pop(0)
+            val = applyOp(val1, val2, token.value)
+            if val is None:
+                return -1
+            else:
+                s.insert(0, Token(val, 'num'))
 
     return s[0]
 
+# -------------------------------------------------------------------------
+# Konverezija infiksnog izraza u postfiksni
 # -------------------------------------------------------------------------
 def isid(token):
     if token.type in ('num', 'fun', 'var'):
@@ -198,3 +247,29 @@ def __infix_to_postfix(expr):
         postfix.append(opstack.pop())
             
     return postfix
+# -------------------------------------------------------------------------
+# Provera ipsravnosti argumenata
+# -------------------------------------------------------------------------
+def check_expr(expr):
+    if len(expr) in (0, 2):
+        print('Nevalidan izraz.')
+        return -1, None
+    
+    if len(expr) == 1:
+        t = expr[0]
+        if t.type == 'num':
+            return 0, int(t.value)
+        elif t.type == 'var':
+            try:
+                val = variables[t.value]
+                return 0, val
+            except KeyError:
+                return 0, 'Promenljiva ne postoji.'
+        elif t.type == 'fun':
+            val = rim(t.value[4:-1])
+            return 0, val
+        else:
+            return -1, None
+
+    return 1, None
+# -------------------------------------------------------------------------d
