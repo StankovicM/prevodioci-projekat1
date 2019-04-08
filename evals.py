@@ -10,8 +10,17 @@ variables = {}
 # "Evaluacija" prefiksnog izraza
 # -------------------------------------------------------------------------
 def eval_prefix(expr):
-    # TODO pretvoriti prefiksni izraz u postfiksni
-    pass
+    while len(expr) > 1:
+        for i in range(len(expr)-2):
+            if expr[i].type == 'op':
+                if not (expr[i + 1].type == 'op') and not (expr[i + 2].type == 'op'):
+                    op, a, b = expr[i:i + 3]
+                    val = applyOp(a, b, op.value)
+                    expr.append(val)
+                    break
+        print (expr)
+
+    return expr[-1]
 
 # -------------------------------------------------------------------------
 # "Evaluacija" infiksnog izraza
@@ -222,6 +231,26 @@ def __infix_to_postfix(expr):
         postfix.append(opstack.pop())
             
     return postfix
+
+# -------------------------------------------------------------------------
+# __prefix_to_postfix - vrsi konverziju prefiksnog izraza u postfiksni
+#                      i vraca novu listu tokena u
+# -------------------------------------------------------------------------
+def __prefix_to_postfix(expr):
+    s = []
+
+    expr.reverse()
+    for token in expr:
+        if token.type == 'op':
+            val2 = s.pop()
+            val1 = s.pop()
+            s.append(val2)
+            s.append(val1)
+            s.append(token)
+        else:
+            s.append(token)
+
+    return s
 
 # -------------------------------------------------------------------------
 # Provera ipsravnosti argumenata
