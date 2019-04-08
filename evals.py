@@ -10,6 +10,7 @@ variables = {}
 # "Evaluacija" prefiksnog izraza
 # -------------------------------------------------------------------------
 def eval_prefix(expr):
+    # TODO pretvoriti prefiksni izraz u postfiksni
     pass
 
 # -------------------------------------------------------------------------
@@ -247,5 +248,5 @@ def check_expr(expr):
             return -1, None
 
     return 1, None
-    
+
 # -------------------------------------------------------------------------d
